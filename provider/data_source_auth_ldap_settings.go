@@ -1,4 +1,4 @@
-package terraform_provider_report_portal
+package provider
 
 import (
 	"context"
