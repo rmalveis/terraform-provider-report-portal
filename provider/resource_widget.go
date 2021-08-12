@@ -1,11 +1,11 @@
-package terraform_provider_report_portal
+package provider
 
 import (
 	"context"
 	"fmt"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	rpClient "github.com/rmalveis/report-portal-client-go/v1/client"
+	rpClient "github.com/rmalveis/report-portal-client-go/client"
 	"strconv"
 	"strings"
 	"time"
@@ -45,6 +45,10 @@ func resourceWidget() *schema.Resource {
 				Required: true,
 				ForceNew: true,
 			},
+			"widget_type_calculated": {
+				Type:     schema.TypeString,
+				Computed: true,
+			},
 			"filter_ids": {
 				Type:     schema.TypeList,
 				Optional: true,
@@ -58,7 +62,6 @@ func resourceWidget() *schema.Resource {
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
 				},
-				ForceNew: true,
 			},
 			"parameters_items_count": {
 				Type:     schema.TypeInt,
@@ -132,7 +135,7 @@ func resourceWidgetRead(ctx context.Context, data *schema.ResourceData, i interf
 	err = data.Set("name", widgetSettings.Name)
 	err = data.Set("owner", widgetSettings.Owner)
 	err = data.Set("share", widgetSettings.Share)
-	err = data.Set("widget_type", widgetSettings.WidgetType)
+	err = data.Set("widget_type_calculated", widgetSettings.WidgetType)
 	err = data.Set("filter_ids", getFilterIds(widgetSettings.AppliedFilters))
 	err = data.Set("parameters_content_fields", widgetSettings.ContentParameters.ContentFields)
 	err = data.Set("parameters_items_count", widgetSettings.ContentParameters.ItemsCount)

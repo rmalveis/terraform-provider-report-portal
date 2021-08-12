@@ -3,7 +3,7 @@ package main
 import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/plugin"
-	report_portal "terraform-provider-report-portal-provider/terraform-provider-report-portal"
+	report_portal "github.com/rmalveis/terraform-provider-report-portal/provider"
 )
 
 func main() {

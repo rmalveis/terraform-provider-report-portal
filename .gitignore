@@ -13,7 +13,16 @@
 
 # Dependency directories (remove the comment below to include it)
 # vendor/
+tfplugindocs
 
 #IDE files
 *.iml
 .idea/
+
+#tf files
+*.tfstate
+bin/
+
+#build files
+dist/
+

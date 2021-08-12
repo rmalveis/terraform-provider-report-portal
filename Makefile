@@ -4,18 +4,19 @@ TARGET_LINUX=linux_amd64
 
 default: build
 
-build: fmtcheck
-	go build -o bin/terraform-provider-reportportal
+build: fmtcheck build-ci
 
 fmtcheck:
 	@sh -c "'$(CURDIR)/scripts/gofmtcheck.sh'"
 
+build-ci:
+	go build -o bin/terraform-provider-reportportal
 fmt:
 	@echo "==> Fixing source code with gofmt..."
-	gofmt -s -w ./report-portal ./report-portal-client-go $(filter-out ./awsproviderlint/go% ./awsproviderlint/README.md ./awsproviderlint/vendor, $(wildcard ./awsproviderlint/*))
+	gofmt -s -w ./provider $(filter-out ./awsproviderlint/go% ./awsproviderlint/README.md ./awsproviderlint/vendor, $(wildcard ./awsproviderlint/*))
 
 test: fmtcheck
-	go test ./report-portal ./report-portal-client-go -timeout=5m -parallel=4
+	go test ./provider -timeout=5m -parallel=4
 
 deploylocal: build
 	@echo "==> Copying the binary into the plugin folder"
