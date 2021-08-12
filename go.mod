@@ -1,7 +1,3 @@
-module report-portal-provider
+module github.com/rmalveis/terraform-provider-report-portal
 
 go 1.16
-
-require (
-	github.com/hashicorp/terraform-plugin-sdk/v2 v2.7.0
-)

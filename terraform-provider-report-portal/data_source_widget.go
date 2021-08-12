@@ -1,10 +1,10 @@
-package report_portal
+package terraform_provider_report_portal
 
 import (
 	"context"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	rpClient "github.com/rmalveis/report-portal-client-go"
+	rpClient "github.com/rmalveis/report-portal-client-go/v1/client"
 	"strconv"
 )
 
