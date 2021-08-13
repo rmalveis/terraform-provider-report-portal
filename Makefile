@@ -12,15 +12,15 @@ fmtcheck:
 
 fmt:
 	@echo "==> Fixing source code with gofmt..."
-	gofmt -s -w ./report-portal ./report-portal-client-go $(filter-out ./awsproviderlint/go% ./awsproviderlint/README.md ./awsproviderlint/vendor, $(wildcard ./awsproviderlint/*))
+	gofmt -s -w ./provider $(filter-out ./awsproviderlint/go% ./awsproviderlint/README.md ./awsproviderlint/vendor, $(wildcard ./awsproviderlint/*))
 
 test: fmtcheck
-	go test ./report-portal ./report-portal-client-go -timeout=5m -parallel=4
+	go test ./provider -timeout=5m -parallel=4
 
 deploylocal: build
 	@echo "==> Copying the binary into the plugin folder"
-	mkdir -p ~/.terraform.d/plugins/acme.com/reportportal/${CURRENT_VERSION}/${TARGET}
-	cp -f bin/terraform-provider-reportportal ~/.terraform.d/plugins/acme.com/reportportal/${CURRENT_VERSION}/${TARGET}/
+	mkdir -p ~/.terraform.d/plugins/raiadrogasil.com/ecommerce/reportportal/${CURRENT_VERSION}/${TARGET}
+	cp -f bin/terraform-provider-reportportal ~/.terraform.d/plugins/raiadrogasil.com/ecommerce/reportportal/${CURRENT_VERSION}/${TARGET}/
 
 deploylinux: fmt build
 	@echo "==> Copying the binary into the plugin folder"

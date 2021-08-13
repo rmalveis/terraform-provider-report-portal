@@ -47,6 +47,10 @@ func resourceDashboard() *schema.Resource {
 							Type:     schema.TypeString,
 							Required: true,
 						},
+						"widget_type": {
+							Type:     schema.TypeString,
+							Required: true,
+						},
 						"share": {
 							Type:     schema.TypeBool,
 							Required: true,
@@ -95,13 +99,11 @@ func resourceDashboardCreate(ctx context.Context, data *schema.ResourceData, i i
 
 	widgetSlice := data.Get("widgets").([]interface{})
 	for _, item := range widgetSlice {
-		widget := mapToWidget(item, dashboardId)
+		widget := mapToWidget(item)
 		err = c.AddWidgetIntoDashboard(projectName, dashboardId, widget)
 		if err != nil {
 			diag.FromErr(err)
 		}
-
-		return resourceDashboardRead(ctx, data, i)
 	}
 
 	return resourceDashboardRead(ctx, data, i)
@@ -137,24 +139,35 @@ func resourceDashboardRead(ctx context.Context, data *schema.ResourceData, i int
 }
 
 func resourceDashboardUpdate(ctx context.Context, data *schema.ResourceData, i interface{}) diag.Diagnostics {
-	//projectName := data.Get("project_name").(string)
-	//dashboardId, err := strconv.Atoi(data.Id())
-	//if err != nil {
-	//	return diag.FromErr(err)
-	//}
+	projectName := data.Get("project_name").(string)
+	dashboardId, err := strconv.Atoi(data.Id())
+	if err != nil {
+		return diag.FromErr(err)
+	}
 
-	//c := i.(*rpClient.Client)
-	//dashboard := &rpClient.UpdateDashboardRequest{
-	//	CreateDashboardRequest: rpClient.CreateDashboardRequest{
-	//		ProjectName: projectName,
-	//		Description: "",
-	//		Name:        "",
-	//		Share:       false,
-	//	},
-	//	DashboardId:            0,
-	//	UpdateWidgets:          nil,
-	//}
-	//c.UpdateDashboard()
+	c := i.(*rpClient.Client)
+
+	widgets := make([]rpClient.Widget, 0, 10)
+	widgetSlice := data.Get("widgets").([]interface{})
+	for _, item := range widgetSlice {
+		widget := mapToWidget(item)
+		widgets = append(widgets, *widget)
+	}
+
+	dashboard := &rpClient.UpdateDashboardRequest{
+		CreateDashboardRequest: rpClient.CreateDashboardRequest{
+			ProjectName: projectName,
+			Description: data.Get("description").(string),
+			Name:        data.Get("name").(string),
+			Share:       false,
+		},
+		DashboardId:   dashboardId,
+		UpdateWidgets: widgets,
+	}
+	err = c.UpdateDashboard(dashboard)
+	if err != nil {
+		return diag.FromErr(err)
+	}
 
 	return resourceDashboardRead(ctx, data, i)
 }
@@ -174,12 +187,12 @@ func resourceDashboardDelete(ctx context.Context, data *schema.ResourceData, i i
 	return diags
 }
 
-func mapToWidget(item interface{}, dashboardId *int) *rpClient.Widget {
+func mapToWidget(item interface{}) *rpClient.Widget {
 	widgetMap := item.(map[string]interface{})
 	widget := &rpClient.Widget{
 		Share:      widgetMap["share"].(bool),
-		WidgetId:   *dashboardId,
-		WidgetName: widgetMap["name"].(string),
+		WidgetId:   widgetMap["widget_id"].(int),
+		WidgetName: widgetMap["widget_name"].(string),
 		WidgetPosition: struct {
 			PositionX int `json:"positionX"`
 			PositionY int `json:"positionY"`
@@ -194,7 +207,7 @@ func mapToWidget(item interface{}, dashboardId *int) *rpClient.Widget {
 			Height: widgetMap["height"].(int),
 			Width:  widgetMap["width"].(int),
 		},
-		WidgetType: widgetMap["type"].(string),
+		WidgetType: widgetMap["widget_type"].(string),
 	}
 	return widget
 }
@@ -203,6 +216,7 @@ func widgetToMap(widget rpClient.Widget) map[string]interface{} {
 	widgetMap := make(map[string]interface{})
 	widgetMap["widget_id"] = widget.WidgetId
 	widgetMap["widget_name"] = widget.WidgetName
+	widgetMap["widget_type"] = widget.WidgetType
 	widgetMap["share"] = widget.Share
 	widgetMap["position_x"] = widget.WidgetPosition.PositionX
 	widgetMap["position_y"] = widget.WidgetPosition.PositionY
