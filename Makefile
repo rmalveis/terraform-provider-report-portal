@@ -4,12 +4,13 @@ TARGET_LINUX=linux_amd64
 
 default: build
 
-build: fmtcheck
-	go build -o bin/terraform-provider-reportportal
+build: fmtcheck build-ci
 
 fmtcheck:
 	@sh -c "'$(CURDIR)/scripts/gofmtcheck.sh'"
 
+build-ci:
+	go build -o bin/terraform-provider-reportportal
 fmt:
 	@echo "==> Fixing source code with gofmt..."
 	gofmt -s -w ./provider $(filter-out ./awsproviderlint/go% ./awsproviderlint/README.md ./awsproviderlint/vendor, $(wildcard ./awsproviderlint/*))
