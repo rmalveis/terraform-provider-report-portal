@@ -20,3 +20,5 @@
 *.tfstate
 bin/
 
+
+dist/
