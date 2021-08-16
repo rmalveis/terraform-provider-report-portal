@@ -63,6 +63,13 @@ func resourceWidget() *schema.Resource {
 					Type: schema.TypeString,
 				},
 			},
+			"parameters_content_fields_calculated": { // Workaround
+				Type:     schema.TypeList,
+				Computed: true,
+				Elem: &schema.Schema{
+					Type: schema.TypeString,
+				},
+			},
 			"parameters_items_count": {
 				Type:     schema.TypeInt,
 				Optional: true,
@@ -137,7 +144,7 @@ func resourceWidgetRead(ctx context.Context, data *schema.ResourceData, i interf
 	err = data.Set("share", widgetSettings.Share)
 	err = data.Set("widget_type_calculated", widgetSettings.WidgetType)
 	err = data.Set("filter_ids", getFilterIds(widgetSettings.AppliedFilters))
-	err = data.Set("parameters_content_fields", widgetSettings.ContentParameters.ContentFields)
+	err = data.Set("parameters_content_fields_calculated", widgetSettings.ContentParameters.ContentFields)
 	err = data.Set("parameters_items_count", widgetSettings.ContentParameters.ItemsCount)
 	err = data.Set("options_latest", widgetSettings.ContentParameters.WidgetOptions["latest"])
 	err = data.Set("options_view_mode", widgetSettings.ContentParameters.WidgetOptions["viewMode"])
