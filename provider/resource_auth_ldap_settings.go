@@ -11,74 +11,90 @@ import (
 	"time"
 )
 
+//TODO: adjust forceNew
+
 func resourceAuthLdapSettings() *schema.Resource {
 	return &schema.Resource{
 		CreateContext: resourceAuthLdapSettingsCreate,
 		ReadContext:   resourceAuthLdapSettingsRead,
-		UpdateContext: resourceAuthLdapSettingsUpdate,
 		DeleteContext: resourceAuthLdapSettingsDelete,
 		Schema: map[string]*schema.Schema{
 			"ldap_attrs_enabled": {
 				Type:     schema.TypeBool,
 				Required: true,
+				ForceNew: true, // workaround to solve inconsistent api update 5.4.0
 			},
 			"ldap_attrs_url": {
 				Type:     schema.TypeString,
 				Required: true,
+				ForceNew: true,
 			},
 			"ldap_attrs_base_dn": {
 				Type:     schema.TypeString,
 				Required: true,
+				ForceNew: true,
 			},
 			"ldap_attrs_sync_email": {
 				Type:     schema.TypeString,
 				Required: true,
+				ForceNew: true,
 			},
 			"ldap_attrs_sync_fullname": {
 				Type:     schema.TypeString,
 				Optional: true,
+				ForceNew: true,
 			},
 			"ldap_attrs_sync_photo": {
 				Type:     schema.TypeString,
 				Optional: true,
+				ForceNew: true,
 			},
 			"user_dn_pattern": {
 				Type:     schema.TypeString,
 				Optional: true,
+				ForceNew: true,
 			},
 			"user_search_filter": {
 				Type:     schema.TypeString,
 				Optional: true,
+				ForceNew: true,
 			},
 			"group_search_base": {
 				Type:     schema.TypeString,
 				Optional: true,
+				ForceNew: true,
 			},
 			"group_search_filter": {
 				Type:     schema.TypeString,
 				Optional: true,
+				ForceNew: true,
 			},
 			"password_encoder_type": {
 				Type:         schema.TypeString,
 				Optional:     true,
+				ForceNew:     true,
 				ValidateFunc: validation.StringInSlice(rpClient.PasswordEncryptionTypes, true),
 			},
 			"password_attr": {
 				Type:     schema.TypeString,
 				Optional: true,
+				ForceNew: true,
 			},
 			"manager_dn": {
 				Type:     schema.TypeString,
 				Optional: true,
+				ForceNew: true,
 			},
 			"manager_password": {
 				Type:      schema.TypeString,
 				Sensitive: true,
 				Optional:  true,
+				ForceNew:  true,
 			},
 			"last_updated": {
 				Type:     schema.TypeString,
 				Optional: true,
+				ForceNew: true,
 				Computed: true,
 			},
 		},
