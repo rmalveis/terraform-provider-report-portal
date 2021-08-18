@@ -214,12 +214,12 @@ func encodeWidgetTypeOption(widgetType string) string {
 	return rpClient.WidgetTypes[widgetType]
 }
 
-func getCriteriaByWidgetType(widgetType *string, data *schema.ResourceData) (*[]string, error) {
+func getCriteriaByWidgetType(widgetType *string, data *schema.ResourceData) ([]string, error) {
 	switch *widgetType {
 	case "launchesDurationChart":
-		return &[]string{"startTime", "endTime", "name", "number", "status"}, nil
+		return []string{"startTime", "endTime", "name", "number", "status"}, nil
 	case "bugTrend":
-		return &[]string{"statistics$defects$product_bug$total",
+		return []string{"statistics$defects$product_bug$total",
 			"statistics$defects$automation_bug$total",
 			"statistics$defects$system_issue$total",
 			"statistics$defects$no_defect$total",
@@ -241,12 +241,12 @@ func getCriteriaByWidgetType(widgetType *string, data *schema.ResourceData) (*[]
 	}
 }
 
-func getCriteriaValues(criteria []interface{}) *[]string {
+func getCriteriaValues(criteria []interface{}) []string {
 	r := make([]string, len(criteria), len(criteria))
 	for i, c := range criteria {
 		r[i] = rpClient.WidgetCriteria[c.(string)]
 	}
-	return &r
+	return r
 }
 
 func getFilterIds(filters []rpClient.Filter) []int {
@@ -268,7 +268,7 @@ func getWidgetParameters(data *schema.ResourceData) (*rpClient.WidgetInputPayloa
 	widgetSettings.WidgetType = widgetType
 	widgetSettings.Name = data.Get("name").(string)
 	widgetSettings.Description = data.Get("description").(string)
-	widgetSettings.ContentParameters.ContentFields = *contentFields
+	widgetSettings.ContentParameters.ContentFields = contentFields
 	widgetSettings.ContentParameters.WidgetOptions = getWidgetOptions(data)
 	widgetSettings.ContentParameters.ItemsCount = data.Get("parameters_items_count").(int)
 	widgetSettings.Share = data.Get("share").(bool)
